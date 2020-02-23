@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Diary</string>
+    <string name="app_description">PDA Diary. Moldavsky Denis, 2020</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_new_group">New group</string>
+    <string name="menu_new_note">New note</string>
+    <string name="menu_start_edit">Edit</string>
+    <string name="menu_end_edit">End edit</string>
+    <string name="menu_attach">Attach photo</string>
+    <string name="menu_detach">Detach photo</string>
+    <string name="menu_about">About</string>
+    <string name="dialog_about">About</string>
+    <string name="dialog_new_group">New group</string>
+    <string name="dialog_new_note">New note</string>
+    <string name="dialog_rename_group">Rename group</string>
+    <string name="dialog_rename_note">Rename note</string>
+    <string name="dialog_accept">Accept</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+    <string name="photo_description">Photo</string>
+</resources>

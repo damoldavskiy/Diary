@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/menu_start_edit" android:id="@+id/edit" />
+    <item android:title="@string/menu_end_edit" android:id="@+id/end" />
+    <item android:title="@string/menu_attach" android:id="@+id/attach" />
+    <item android:title="@string/menu_detach" android:id="@+id/detach" />
+</menu>

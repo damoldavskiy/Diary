@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Журнал</string>
+    <string name="app_description">Журнал PDA. Молдавский Денис, 2020</string>
+    <string name="menu_rename">Переименовать</string>
+    <string name="menu_delete">Удалить</string>
+    <string name="menu_new_group">Новый раздел</string>
+    <string name="menu_new_note">Новая запись</string>
+    <string name="menu_start_edit">Редактировать</string>
+    <string name="menu_end_edit">Закончить редактирование</string>
+    <string name="menu_attach">Прикрепить фото</string>
+    <string name="menu_detach">Открепить фото</string>
+    <string name="menu_about">О приложении</string>
+    <string name="dialog_about">О приложении</string>
+    <string name="dialog_new_group">Новый раздел</string>
+    <string name="dialog_new_note">Новая запись</string>
+    <string name="dialog_rename_group">Переименовывание раздела</string>
+    <string name="dialog_rename_note">Переименовывание записи</string>
+    <string name="dialog_accept">Подтвердить</string>
+    <string name="dialog_cancel">Отменить</string>
+    <string name="dialog_ok">Да</string>
+    <string name="photo_description">Фотография</string>
+</resources>
