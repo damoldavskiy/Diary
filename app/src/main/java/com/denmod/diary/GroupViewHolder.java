@@ -1,5 +1,6 @@
 package com.denmod.diary;
 
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -7,6 +8,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class GroupViewHolder extends RecyclerView.ViewHolder {
 
@@ -41,6 +46,22 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
                 switch (item.getItemId()) {
                     case R.id.new_note:
                         Dialogs.InputDialog(v.getContext(), R.string.dialog_new_note, "", name -> {
+                            if (name.length() == 0)
+                                return;
+
+                            Note note = new Note(name);
+                            group.add(note);
+                            note.write();
+                            if (group.isExpanded()) {
+                                adapter.getItems().add(index + group.size(), note);
+                                adapter.notifyItemInserted(index + group.size());
+                            }
+                        });
+                        break;
+                    case R.id.new_note_date:
+                        Date date = Calendar.getInstance().getTime();
+                        String defaultName = new SimpleDateFormat("dd.MM.yyyy").format(date);
+                        Dialogs.InputDialog(v.getContext(), R.string.dialog_new_note, defaultName ,name -> {
                             if (name.length() == 0)
                                 return;
 

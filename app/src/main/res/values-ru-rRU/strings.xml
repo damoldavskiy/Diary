@@ -6,10 +6,12 @@
     <string name="menu_delete">Удалить</string>
     <string name="menu_new_group">Новый раздел</string>
     <string name="menu_new_note">Новая запись</string>
+    <string name="menu_new_note_date">Новая запись с датой</string>
     <string name="menu_start_edit">Редактировать</string>
     <string name="menu_end_edit">Закончить редактирование</string>
     <string name="menu_attach">Прикрепить фото</string>
     <string name="menu_detach">Открепить фото</string>
+    <string name="menu_send">Отправить</string>
     <string name="menu_about">О приложении</string>
     <string name="dialog_about">О приложении</string>
     <string name="dialog_new_group">Новый раздел</string>

@@ -6,4 +6,5 @@
     <item android:title="@string/menu_end_edit" android:id="@+id/end" />
     <item android:title="@string/menu_attach" android:id="@+id/attach" />
     <item android:title="@string/menu_detach" android:id="@+id/detach" />
+    <item android:title="@string/menu_send" android:id="@+id/send" />
 </menu>

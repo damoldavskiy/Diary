@@ -2,7 +2,6 @@ package com.denmod.diary;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -18,7 +17,7 @@ import android.widget.ImageView;
 
 public class ViewActivity extends AppCompatActivity {
 
-    public static final int PHOTO = 0;
+    public static final int PHOTO = 1;
 
     Note note;
     ImageView photo;
@@ -41,7 +40,7 @@ public class ViewActivity extends AppCompatActivity {
         photo = findViewById(R.id.photo);
         content = findViewById(R.id.content);
 
-        setTitle(note.getName());
+        setTitle("# " + note.getName());
         setBitmap(note.readPhoto());
         setEditing(editing);
         content.setText(note.read());
@@ -81,13 +80,20 @@ public class ViewActivity extends AppCompatActivity {
                 saveText();
                 break;
             case R.id.attach:
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(NotesFileSystem.getPhotoPath(note)));
-                startActivityForResult(intent, PHOTO);
+                Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(NotesFileSystem.getPhotoPath(note)));
+                startActivityForResult(imageIntent, PHOTO);
                 break;
             case R.id.detach:
                 setBitmap(null);
                 note.deletePhoto();
+                break;
+            case R.id.send:
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.setType("text/plain");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, note.getName() + "\n" + content.getText().toString());
+                startActivity(Intent.createChooser(sendIntent, null));
+                break;
         }
         updateMenu();
 

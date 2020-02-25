@@ -15,7 +15,7 @@ public class Dialogs {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
         View view = LayoutInflater.from(context).inflate(R.layout.input, null);
         final EditText input = view.findViewById(R.id.input);
-        input.setText(value);
+        input.append(value);
 
         AlertDialog alertDialog = builder
                 .setView(view)
