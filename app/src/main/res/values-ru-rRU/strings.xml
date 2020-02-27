@@ -14,10 +14,13 @@
     <string name="menu_send">Отправить</string>
     <string name="menu_about">О приложении</string>
     <string name="dialog_about">О приложении</string>
+    <string name="dialog_photo_option">Вариант получения фото</string>
     <string name="dialog_new_group">Новый раздел</string>
     <string name="dialog_new_note">Новая запись</string>
     <string name="dialog_rename_group">Переименовывание раздела</string>
     <string name="dialog_rename_note">Переименовывание записи</string>
+    <string name="dialog_camera">Камера</string>
+    <string name="dialog_gallery">Галерея</string>
     <string name="dialog_accept">Подтвердить</string>
     <string name="dialog_cancel">Отменить</string>
     <string name="dialog_ok">Да</string>

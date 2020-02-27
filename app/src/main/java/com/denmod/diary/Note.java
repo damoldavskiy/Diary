@@ -1,6 +1,7 @@
 package com.denmod.diary;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -10,71 +11,90 @@ public class Note implements Element, Serializable {
     private String name;
     private Group group;
 
-    public Note(String name) {
+    Note(String name) {
         this.name = name;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public Group getGroup() {
+    void setName(String name) {
+        this.name = name;
+    }
+
+    Group getGroup() {
         return group;
     }
 
-    public void setGroup(Group group) {
+    void setGroup(Group group) {
         this.group = group;
     }
 
-    public void rename(String value) {
+    void rename(String name) {
         try {
-            NotesFileSystem.rename(this, value);
-            name = value;
-        } catch (IOException ignored) { }
-    }
-
-    public void write() {
-        try {
-            NotesFileSystem.write(this);
-        } catch (IOException ignored) { }
-    }
-
-    public boolean writeText(String content) {
-        try {
-            NotesFileSystem.writeText(this, content);
-            return true;
+            NotesFileSystem.renameInList(this, name);
+            NotesFileSystem.getPath(this).renameTo(NotesFileSystem.getNotePath(getGroup(), name));
+            this.name = name;
         } catch (IOException e) {
-            return false;
+            Log.e("Note.rename", e.getMessage());
         }
     }
 
-    public boolean delete() {
+    void write() {
         try {
-            boolean flag = NotesFileSystem.delete(this);
-            if (flag)
-                group.remove(this);
-            return flag;
-        } catch (IOException ignored) {
-            return false;
+            NotesFileSystem.addToList(this);
+            NotesFileSystem.getPath(this).mkdirs();
+        } catch (IOException e) {
+            Log.e("Note.write", e.getMessage());
         }
     }
 
-    public boolean deletePhoto() {
-        return NotesFileSystem.deletePhoto(this);
+    void writeText(String content) {
+        try {
+            FileSystem.writeText(NotesFileSystem.getTextPath(this), content);
+        } catch (IOException e) {
+            Log.e("Note.writeText", e.getMessage());
+        }
     }
 
-    public String read() {
+    void writePhoto(Bitmap bitmap) {
         try {
-            return NotesFileSystem.readText(this);
+            FileSystem.writeImage(NotesFileSystem.getPhotoPath(this), bitmap);
         } catch (IOException e) {
+            Log.e("Note.writePhoto", e.getMessage());
+        }
+    }
+
+    void delete() {
+        try {
+            NotesFileSystem.deleteFromList(this);
+            FileSystem.deleteRecursively(NotesFileSystem.getPath(this));
+            group.remove(this);
+        } catch (IOException e) {
+            Log.e("Note.delete", e.getMessage());
+        }
+    }
+
+    void deletePhoto() {
+        if (!NotesFileSystem.getPhotoPath(this).delete());
+            Log.e("Note.deletePhoto", "Photo not deleted");
+    }
+
+    String readText() {
+        try {
+            return FileSystem.readText(NotesFileSystem.getTextPath(this));
+        } catch (IOException e) {
+            Log.e("Note.readText", e.getMessage());
             return null;
         }
     }
 
-    public Bitmap readPhoto() {
+    Bitmap readPhoto() {
         try {
-            return NotesFileSystem.readPhoto(this);
+            return FileSystem.readImage(NotesFileSystem.getPhotoPath(this));
         } catch (IOException e) {
+            Log.e("Note.readPhoto", e.getMessage());
             return null;
         }
     }

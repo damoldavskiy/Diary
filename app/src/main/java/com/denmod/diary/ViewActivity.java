@@ -9,15 +9,20 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.io.IOException;
+import java.util.function.Consumer;
+
 public class ViewActivity extends AppCompatActivity {
 
-    public static final int PHOTO = 1;
+    public static final int PHOTO_CAMERA = 1;
+    public static final int PHOTO_GALLERY = 2;
 
     Note note;
     ImageView photo;
@@ -43,7 +48,7 @@ public class ViewActivity extends AppCompatActivity {
         setTitle("# " + note.getName());
         setBitmap(note.readPhoto());
         setEditing(editing);
-        content.setText(note.read());
+        content.setText(note.readText());
     }
 
     @Override
@@ -80,9 +85,17 @@ public class ViewActivity extends AppCompatActivity {
                 saveText();
                 break;
             case R.id.attach:
-                Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(NotesFileSystem.getPhotoPath(note)));
-                startActivityForResult(imageIntent, PHOTO);
+                Dialogs.PhotoDialog(this, option -> {
+                    if (option == R.string.dialog_camera) {
+                        Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(NotesFileSystem.getPhotoPath(note)));
+                        startActivityForResult(imageIntent, PHOTO_CAMERA);
+                    } else {
+                        Intent imageIntent = new Intent(Intent.ACTION_PICK);
+                        imageIntent.setType("image/*");
+                        startActivityForResult(imageIntent, PHOTO_GALLERY);
+                    }
+                });
                 break;
             case R.id.detach:
                 setBitmap(null);
@@ -91,7 +104,8 @@ public class ViewActivity extends AppCompatActivity {
             case R.id.send:
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);
                 sendIntent.setType("text/plain");
-                sendIntent.putExtra(Intent.EXTRA_TEXT, note.getName() + "\n" + content.getText().toString());
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(NotesFileSystem.getPhotoPath(note)));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, note.getName() + System.lineSeparator() + content.getText().toString());
                 startActivity(Intent.createChooser(sendIntent, null));
                 break;
         }
@@ -104,10 +118,21 @@ public class ViewActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (resultCode != RESULT_OK)
+            return;
+
         switch (requestCode) {
-            case PHOTO:
-                if (resultCode == RESULT_OK)
-                    setBitmap(note.readPhoto());
+            case PHOTO_CAMERA:
+                setBitmap(note.readPhoto());
+                break;
+            case PHOTO_GALLERY:
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                    setBitmap(bitmap);
+                    note.writePhoto(bitmap);
+                } catch (IOException e) {
+                    Log.e("ViewActivity.onActivityResult", e.getMessage());
+                }
                 break;
         }
         updateMenu();

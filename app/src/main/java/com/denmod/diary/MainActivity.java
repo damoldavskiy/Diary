@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
 
         try {
-            NotesFileSystem.setPath(new java.io.File(Environment.getExternalStorageDirectory(), "Diary"));
+            NotesFileSystem.setRoot(new java.io.File(Environment.getExternalStorageDirectory(), "Diary"));
         } catch (IOException e) {
             Log.e("Error", "Set path: " + e.getMessage());
         }

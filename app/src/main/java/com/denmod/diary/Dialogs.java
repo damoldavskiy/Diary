@@ -1,6 +1,8 @@
 package com.denmod.diary;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -8,11 +10,12 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 
+import java.lang.reflect.Type;
 import java.util.function.Consumer;
 
 public class Dialogs {
     public static void InputDialog(Context context, int title, String value, Consumer<String> action) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.input, null);
         final EditText input = view.findViewById(R.id.input);
         input.append(value);
@@ -29,11 +32,27 @@ public class Dialogs {
     }
 
     public static void AboutDialog(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         AlertDialog alertDialog = builder
                 .setTitle(R.string.dialog_about)
                 .setMessage(R.string.app_description)
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> dialog.cancel())
+                .create();
+
+        alertDialog.show();
+    }
+
+    public static void PhotoDialog(Context context, Consumer<Integer> action) {
+        TypedArray options = context.getResources().obtainTypedArray(R.array.photo_options);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog alertDialog = builder
+                .setTitle(R.string.dialog_photo_option)
+                .setItems(R.array.photo_options, (dialog, which) -> {
+                    action.accept(options.getResourceId(which, -1));
+                    options.recycle();
+                })
+                .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.cancel())
                 .create();
 
         alertDialog.show();

@@ -1,5 +1,7 @@
 package com.denmod.diary;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,11 +12,11 @@ public class Group implements Element, Serializable {
     private ArrayList<Note> notes;
     private boolean expanded; // TODO Makes Group View-Model
 
-    public Group(String name) {
+    Group(String name) {
         this(name, new ArrayList<>());
     }
 
-    public Group(String name, ArrayList<Note> notes) {
+    Group(String name, ArrayList<Note> notes) {
         this.name = name;
         this.notes = notes;
 
@@ -22,52 +24,67 @@ public class Group implements Element, Serializable {
             note.setGroup(this);
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public boolean isExpanded() {
+    void setName(String name) {
+        this.name = name;
+    }
+
+    boolean isExpanded() {
         return expanded;
     }
 
-    public void setExpanded(boolean value) {
+    void setExpanded(boolean value) {
         expanded = value;
     }
 
-    public void add(Note note) {
+    void add(Note note) {
         notes.add(note);
         note.setGroup(this);
     }
 
-    public void remove(Note note) {
+    void remove(Note note) {
         notes.remove(note);
         note.setGroup(null);
     }
 
-    public Note get(int position) {
+    Note get(int position) {
         return notes.get(position);
     }
 
-    public int size() {
+    int size() {
         return notes.size();
     }
 
-    public void write() {
+    void write() {
         try {
-            NotesFileSystem.write(this);
-        } catch (IOException ignored) { }
+            NotesFileSystem.addToList(this);
+            NotesFileSystem.getPath(this).mkdirs();
+            NotesFileSystem.getList(this).createNewFile();
+        } catch (IOException e) {
+            Log.e("Group.write", e.getMessage());
+        }
     }
 
-    public void rename(String name) {
+    void rename(String name) {
         try {
-            NotesFileSystem.rename(this, name);
+            NotesFileSystem.renameInList(this, name);
+            NotesFileSystem.getPath(this).renameTo(NotesFileSystem.getGroupPath(name));
             this.name = name;
-        } catch (IOException e) { }
+        } catch (IOException e) {
+            Log.e("Group.rename", e.getMessage());
+        }
     }
-
-    public void delete() {
+    void delete() {
         try {
-            NotesFileSystem.delete(this);
-        } catch (IOException e) { }
+            NotesFileSystem.deleteFromList(this);
+            FileSystem.deleteRecursively(NotesFileSystem.getPath(this));
+            for (Note note : notes)
+                note.setGroup(null);
+        } catch (IOException e) {
+            Log.e("Note.delete", e.getMessage());
+        }
     }
 }
