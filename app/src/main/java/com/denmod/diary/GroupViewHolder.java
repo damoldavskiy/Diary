@@ -81,14 +81,18 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
                         });
                         break;
                     case R.id.delete:
-                        if (group.isExpanded()) {
-                            for (int i = 0; i < group.size(); ++i)
-                                adapter.getItems().remove(index + 1);
-                            adapter.notifyItemRangeRemoved(index + 1, group.size());
-                        }
-                        group.delete();
-                        adapter.getItems().remove(index);
-                        adapter.notifyItemRemoved(index);
+                        Dialogs.SureDialog(v.getContext(), (result -> {
+                            if (!result)
+                                return;
+                            if (group.isExpanded()) {
+                                for (int i = 0; i < group.size(); ++i)
+                                    adapter.getItems().remove(index + 1);
+                                adapter.notifyItemRangeRemoved(index + 1, group.size());
+                            }
+                            group.delete();
+                            adapter.getItems().remove(index);
+                            adapter.notifyItemRemoved(index);
+                        }));
                         break;
                 }
                 return true;

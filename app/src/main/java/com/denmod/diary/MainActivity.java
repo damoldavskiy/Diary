@@ -14,6 +14,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     List<Group> list;
     RecyclerView recycler;
     RecyclerView.Adapter adapter;
+    boolean blocked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_group:
+                if (blocked) {
+                    Toast.makeText(this, R.string.toast_block, Toast.LENGTH_LONG).show();
+                    return true;
+                }
+
                 Dialogs.InputDialog(this, R.string.dialog_new_group, "", name -> {
                     if (name.length() == 0)
                         return;
@@ -82,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        recreate();
+        if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(this, R.string.toast_block, Toast.LENGTH_LONG).show();
+            blocked = true;
+        } else
+            recreate();
     }
 }

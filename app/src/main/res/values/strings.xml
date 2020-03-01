@@ -20,8 +20,12 @@
     <string name="dialog_rename_note">Rename note</string>
     <string name="dialog_camera">Camera</string>
     <string name="dialog_gallery">Gallery</string>
+    <string name="dialog_sure">Are you sure?</string>
     <string name="dialog_accept">Accept</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_ok">OK</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="toast_block">Without permission to write on external storage it\'s impossible to this application to work</string>
     <string name="photo_description">Photo</string>
 </resources>

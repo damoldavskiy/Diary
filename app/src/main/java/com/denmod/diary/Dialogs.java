@@ -2,7 +2,6 @@ package com.denmod.diary;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -10,7 +9,6 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 
-import java.lang.reflect.Type;
 import java.util.function.Consumer;
 
 public class Dialogs {
@@ -53,6 +51,17 @@ public class Dialogs {
                     options.recycle();
                 })
                 .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.cancel())
+                .create();
+
+        alertDialog.show();
+    }
+
+    public static void SureDialog(Context context, java.util.function.Consumer<Boolean> action) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog alertDialog = builder
+                .setTitle(R.string.dialog_sure)
+                .setPositiveButton(R.string.dialog_yes, (dialog, which) -> action.accept(true))
+                .setNegativeButton(R.string.dialog_no, (dialog, which) -> action.accept(false))
                 .create();
 
         alertDialog.show();

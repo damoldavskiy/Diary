@@ -3,7 +3,9 @@ package com.denmod.diary;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,11 +15,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
 public class ViewActivity extends AppCompatActivity {
 
@@ -28,6 +31,7 @@ public class ViewActivity extends AppCompatActivity {
     ImageView photo;
     EditText content;
     boolean editing;
+    boolean zoom;
 
     MenuItem edit;
     MenuItem end;
@@ -43,7 +47,37 @@ public class ViewActivity extends AppCompatActivity {
 
         note = (Note)getIntent().getSerializableExtra(MainActivity.NOTE);
         photo = findViewById(R.id.photo);
+        photo.setOnLongClickListener(v -> {
+            if (zoom) {
+                photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                photo.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 500));
+            } else {
+                photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                photo.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            }
+
+            photo.requestLayout();
+            zoom = !zoom;
+            return true;
+        });
         content = findViewById(R.id.content);
+        content.setOnLongClickListener(v -> {
+            if (!editing) {
+                setEditing(true);
+                updateMenu();
+                return true;
+            }
+            return false;
+        });
+        content.setOnFocusChangeListener((v, hasFocus) -> {
+            InputMethodManager inputMethodManager = (InputMethodManager)ViewActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (hasFocus)
+                inputMethodManager.showSoftInput(content, InputMethodManager.SHOW_FORCED);
+            else
+                inputMethodManager.hideSoftInputFromWindow(content.getWindowToken(), 0);
+        });
+
+        photo.getLayoutParams().height = 500;
 
         setTitle("# " + note.getName());
         setBitmap(note.readPhoto());

@@ -21,8 +21,12 @@
     <string name="dialog_rename_note">Переименовывание записи</string>
     <string name="dialog_camera">Камера</string>
     <string name="dialog_gallery">Галерея</string>
+    <string name="dialog_sure">Вы уверены?</string>
     <string name="dialog_accept">Подтвердить</string>
     <string name="dialog_cancel">Отменить</string>
-    <string name="dialog_ok">Да</string>
+    <string name="dialog_ok">ОК</string>
+    <string name="dialog_yes">Да</string>
+    <string name="dialog_no">Нет</string>
+    <string name="toast_block">Без разрешения на запись на внешний накопитель приложению невозможно продолжить работу</string>
     <string name="photo_description">Фотография</string>
 </resources>
