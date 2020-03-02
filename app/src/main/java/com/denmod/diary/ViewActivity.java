@@ -79,7 +79,7 @@ public class ViewActivity extends AppCompatActivity {
 
         photo.getLayoutParams().height = 500;
 
-        setTitle("# " + note.getName());
+        updateTitle();
         setBitmap(note.readPhoto());
         setEditing(editing);
         content.setText(note.readText());
@@ -134,6 +134,26 @@ public class ViewActivity extends AppCompatActivity {
             case R.id.detach:
                 setBitmap(null);
                 note.deletePhoto();
+                break;
+            case R.id.rename:
+                Dialogs.InputDialog(this, R.string.dialog_rename_note, note.getName(), name -> {
+                    if (name.length() == 0 || name.equals(note.getName()))
+                        return;
+                    note.rename(name);
+                    updateTitle();
+                    Intent intent = new Intent();
+                    intent.putExtra(MainActivity.NOTE, note);
+                    intent.putExtra(MainActivity.ACTION, R.id.rename);
+                    setResult(RESULT_OK, intent);
+                });
+                break;
+            case R.id.delete:
+                note.delete();
+                Intent intent = new Intent();
+                intent.putExtra(MainActivity.NOTE, note);
+                intent.putExtra(MainActivity.ACTION, R.id.delete);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             case R.id.send:
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);
@@ -200,6 +220,11 @@ public class ViewActivity extends AppCompatActivity {
             edit.setVisible(!editing);
         if (end != null)
             end.setVisible(editing);
+    }
+
+    void updateTitle()
+    {
+        setTitle("# " + note.getName());
     }
 
     void saveText() {

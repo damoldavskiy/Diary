@@ -1,12 +1,14 @@
 package com.denmod.diary;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,10 +24,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static final String NOTE = "NOTE";
+    public static final String ACTION = "ACTION";
+
+    public static final int VIEW_RESULT = 1;
 
     List<Group> list;
     RecyclerView recycler;
-    RecyclerView.Adapter adapter;
+    NoteAdapter adapter;
     boolean blocked;
 
     @Override
@@ -94,5 +99,29 @@ public class MainActivity extends AppCompatActivity {
             blocked = true;
         } else
             recreate();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK)
+            if (requestCode == VIEW_RESULT) {
+                Note note = (Note)data.getSerializableExtra(NOTE);
+                int position = adapter.getItems().indexOf(adapter.getSelected());
+                int action = data.getIntExtra(ACTION, 0);
+                // Note and its group given are serialized, so we should modify ones from adapter
+                switch (action) {
+                    case R.id.rename:
+                        adapter.getSelected().setName(note.getName());
+                        adapter.notifyItemChanged(position);
+                        break;
+                    case R.id.delete:
+                        adapter.getSelected().getGroup().remove(note);
+                        adapter.getItems().remove(position);
+                        adapter.notifyItemRemoved(position);
+                        break;
+                }
+            }
     }
 }

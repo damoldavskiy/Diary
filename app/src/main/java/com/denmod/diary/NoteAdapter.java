@@ -17,6 +17,8 @@ public class NoteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LayoutInflater inflater;
     private List<Element> elements;
 
+    private Note selected;
+
     NoteAdapter(Context context, List<Group> groups) {
         inflater = LayoutInflater.from(context);
         elements = (List<Element>)(Object)groups;
@@ -54,5 +56,13 @@ public class NoteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public List<Element> getItems() {
         return elements;
+    }
+
+    public Note getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Note note) {
+        selected = note;
     }
 }

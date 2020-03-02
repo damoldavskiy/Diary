@@ -2,6 +2,8 @@ package com.denmod.diary;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class Group implements Element, Serializable {
 
     void remove(Note note) {
         notes.remove(note);
-        note.setGroup(null);
+//        note.setGroup(null);
     }
 
     Note get(int position) {
@@ -77,6 +79,7 @@ public class Group implements Element, Serializable {
             Log.e("Group.rename", e.getMessage());
         }
     }
+
     void delete() {
         try {
             NotesFileSystem.deleteFromList(this);
@@ -86,5 +89,13 @@ public class Group implements Element, Serializable {
         } catch (IOException e) {
             Log.e("Note.delete", e.getMessage());
         }
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof Group))
+            return false;
+        Group other = (Group)obj;
+        return other.name.equals(name);
     }
 }

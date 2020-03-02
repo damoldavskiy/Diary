@@ -2,6 +2,7 @@ package com.denmod.diary;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,6 +17,7 @@ public class Dialogs {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.input, null);
         final EditText input = view.findViewById(R.id.input);
+
         input.append(value);
 
         AlertDialog alertDialog = builder
@@ -24,6 +26,14 @@ public class Dialogs {
                 .setPositiveButton(R.string.dialog_accept, (dialog, which) -> action.accept(input.getText().toString()))
                 .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.cancel())
                 .create();
+
+        input.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                action.accept(input.getText().toString());
+                alertDialog.dismiss();
+            }
+            return false;
+        });
 
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         alertDialog.show();

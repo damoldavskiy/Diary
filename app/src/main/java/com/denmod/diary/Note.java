@@ -3,6 +3,8 @@ package com.denmod.diary;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -97,5 +99,13 @@ public class Note implements Element, Serializable {
             Log.e("Note.readPhoto", e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof Note))
+            return false;
+        Note other = (Note)obj;
+        return other.group.equals(group) && other.name.equals(name);
     }
 }
