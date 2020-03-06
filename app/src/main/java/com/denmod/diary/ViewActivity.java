@@ -148,6 +148,7 @@ public class ViewActivity extends AppCompatActivity {
                 });
                 break;
             case R.id.delete:
+                setEditing(false);
                 note.delete();
                 Intent intent = new Intent();
                 intent.putExtra(MainActivity.NOTE, note);

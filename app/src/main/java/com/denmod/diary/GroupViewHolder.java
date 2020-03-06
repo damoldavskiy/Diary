@@ -1,7 +1,7 @@
 package com.denmod.diary;
 
-import android.text.format.Time;
-import android.util.Log;
+import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -56,6 +56,11 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
                                 adapter.getItems().add(index + group.size(), note);
                                 adapter.notifyItemInserted(index + group.size());
                             }
+
+                            Intent intent = new Intent(v.getContext(), ViewActivity.class);
+                            intent.putExtra(MainActivity.NOTE, note);
+                            ((Activity)v.getContext()).startActivityForResult(intent, MainActivity.VIEW_RESULT);
+                            adapter.setSelected(note);
                         });
                         break;
                     case R.id.new_note_date:
