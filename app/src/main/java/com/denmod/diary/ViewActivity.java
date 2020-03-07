@@ -158,9 +158,12 @@ public class ViewActivity extends AppCompatActivity {
                 break;
             case R.id.send:
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                sendIntent.setType("text/plain");
-                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(NotesFileSystem.getPhotoPath(note)));
+                if (photo.getMeasuredHeight() != 0)
+                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(NotesFileSystem.getPhotoPath(note)));
+                else
+                    Log.e("ViewActivity.onOptionsItemSelected", "Photo not found");
                 sendIntent.putExtra(Intent.EXTRA_TEXT, note.getName() + System.lineSeparator() + content.getText().toString());
+                sendIntent.setType("text/plain");
                 startActivity(Intent.createChooser(sendIntent, null));
                 break;
         }
