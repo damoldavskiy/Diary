@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String NOTE = "NOTE";
     public static final String ACTION = "ACTION";
+    public static final String OPEN_IMMEDIATELY = "OPEN_IMMEDIATELY";
 
     public static final int VIEW_RESULT = 1;
 
@@ -50,12 +51,32 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e("Error", "Set path: " + e.getMessage());
         }
-        list = NotesFileSystem.readGroups();
 
+        Note note = (Note)getIntent().getSerializableExtra(MainActivity.NOTE);
+        if (note != null) { // Started from widget
+            if (!note.getGroup().exists())
+                note.getGroup().write();
+
+            String name = note.getName();
+            int number = 0;
+            while (note.exists())
+                note.setName(name + " " + ++number);
+            note.write();
+        }
+
+        list = NotesFileSystem.readGroups();
         adapter = new NoteAdapter(this, list);
 
         recycler = findViewById(R.id.list);
         recycler.setAdapter(adapter);
+
+        if (note != null) { // List and note created, opening
+            Intent intent = new Intent(this, ViewActivity.class);
+            intent.putExtra(MainActivity.NOTE, note);
+            intent.putExtra(MainActivity.OPEN_IMMEDIATELY, true);
+            startActivityForResult(intent, MainActivity.VIEW_RESULT);
+            adapter.setSelected(note);
+        }
     }
 
     @Override

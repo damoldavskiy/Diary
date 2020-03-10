@@ -101,6 +101,10 @@ public class Note implements Element, Serializable {
         }
     }
 
+    boolean exists() {
+        return NotesFileSystem.getPath(this).exists();
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (!(obj instanceof Note))

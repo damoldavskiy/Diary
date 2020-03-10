@@ -91,6 +91,10 @@ public class Group implements Element, Serializable {
         }
     }
 
+    boolean exists() {
+        return NotesFileSystem.getPath(this).exists();
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (!(obj instanceof Group))

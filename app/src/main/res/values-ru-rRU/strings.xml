@@ -29,4 +29,7 @@
     <string name="dialog_no">Нет</string>
     <string name="toast_block">Без разрешения на запись на внешний накопитель приложению невозможно продолжить работу</string>
     <string name="photo_description">Фотография</string>
+    <string name="widget_text">Запись</string>
+    <string name="widget_note_default">Запись</string>
+    <string name="widget_group_default">Быстрые записи</string>
 </resources>

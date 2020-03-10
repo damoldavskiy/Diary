@@ -28,4 +28,7 @@
     <string name="dialog_no">No</string>
     <string name="toast_block">Without permission to write on external storage it\'s impossible to this application to work</string>
     <string name="photo_description">Photo</string>
+    <string name="widget_text">Note</string>
+    <string name="widget_note_default">Note</string>
+    <string name="widget_group_default">Fast notes</string>
 </resources>

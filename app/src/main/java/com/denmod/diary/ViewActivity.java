@@ -45,6 +45,9 @@ public class ViewActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        editing = getIntent().getBooleanExtra(MainActivity.OPEN_IMMEDIATELY, false);
+        getIntent().removeExtra(MainActivity.OPEN_IMMEDIATELY);
+
         note = (Note)getIntent().getSerializableExtra(MainActivity.NOTE);
         photo = findViewById(R.id.photo);
         photo.setOnLongClickListener(v -> {
@@ -90,6 +93,7 @@ public class ViewActivity extends AppCompatActivity {
         super.onStop();
         if (editing)
             saveText();
+        closeKeyboard();
     }
 
     @Override
@@ -110,6 +114,7 @@ public class ViewActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                closeKeyboard();
                 return true;
             case R.id.edit:
                 setEditing(true);
@@ -233,5 +238,10 @@ public class ViewActivity extends AppCompatActivity {
 
     void saveText() {
         note.writeText(content.getText().toString());
+    }
+
+    void closeKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)ViewActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(content.getWindowToken(), 0);
     }
 }

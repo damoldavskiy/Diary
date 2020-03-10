@@ -9,10 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 public class GroupViewHolder extends RecyclerView.ViewHolder {
 
     private NoteAdapter adapter;
@@ -64,8 +60,7 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
                         });
                         break;
                     case R.id.new_note_date:
-                        Date date = Calendar.getInstance().getTime();
-                        String defaultName = new SimpleDateFormat("dd.MM.yyyy").format(date);
+                        String defaultName = Utility.getDate();
                         Dialogs.InputDialog(v.getContext(), R.string.dialog_new_note, defaultName ,name -> {
                             if (name.length() == 0)
                                 return;
