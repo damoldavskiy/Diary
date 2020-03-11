@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -33,13 +34,20 @@ public class Note implements Element, Serializable {
         this.group = group;
     }
 
-    void rename(String name) {
+    boolean rename(String name) {
         try {
-            NotesFileSystem.renameInList(this, name);
-            NotesFileSystem.getPath(this).renameTo(NotesFileSystem.getNotePath(getGroup(), name));
-            this.name = name;
+            File newFile = NotesFileSystem.getNotePath(getGroup(), name);
+            if (newFile.exists())
+                return false;
+            boolean result = NotesFileSystem.getPath(this).renameTo(newFile);
+            if (result) {
+                NotesFileSystem.renameInList(this, name);
+                this.name = name;
+            }
+            return result;
         } catch (IOException e) {
             Log.e("Note.rename", e.getMessage());
+            return false;
         }
     }
 

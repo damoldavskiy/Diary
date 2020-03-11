@@ -75,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(MainActivity.NOTE, note);
             intent.putExtra(MainActivity.OPEN_IMMEDIATELY, true);
             startActivityForResult(intent, MainActivity.VIEW_RESULT);
-            adapter.setSelected(note);
+            Group originalGroup = list.get(list.indexOf(note.getGroup()));
+            Note originalNote = originalGroup.get(originalGroup.indexOf(note));
+            adapter.setSelected(originalNote);
         }
     }
 
@@ -99,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
                         return;
 
                     Group group = new Group(name);
+                    if (group.exists()) {
+                        Toast.makeText(this, R.string.toast_exists, Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     group.write();
                     list.add(group);
                     adapter.notifyItemInserted(list.size() - 1);
@@ -128,19 +134,24 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK)
             if (requestCode == VIEW_RESULT) {
-                Note note = (Note)data.getSerializableExtra(NOTE);
-                int position = adapter.getItems().indexOf(adapter.getSelected());
                 int action = data.getIntExtra(ACTION, 0);
-                // Note and its group given are serialized, so we should modify ones from adapter
+
+                // Note and its group given are serialized, so we should modify ones from list
+                Note note = (Note)data.getSerializableExtra(NOTE);
+
+                int position = adapter.getItems().indexOf(adapter.getSelected());
                 switch (action) {
                     case R.id.rename:
                         adapter.getSelected().setName(note.getName());
-                        adapter.notifyItemChanged(position);
+                        if (adapter.getSelected().getGroup().isExpanded())
+                            adapter.notifyItemChanged(position);
                         break;
                     case R.id.delete:
-                        adapter.getSelected().getGroup().remove(note);
-                        adapter.getItems().remove(position);
-                        adapter.notifyItemRemoved(position);
+                        adapter.getSelected().getGroup().remove(adapter.getSelected());
+                        if (adapter.getSelected().getGroup().isExpanded()) {
+                            adapter.getItems().remove(position);
+                            adapter.notifyItemRemoved(position);
+                        }
                         break;
                 }
             }

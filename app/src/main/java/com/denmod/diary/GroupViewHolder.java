@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +47,11 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
                                 return;
 
                             Note note = new Note(name);
+                            note.setGroup(group);
+                            if (note.exists()) {
+                                Toast.makeText(v.getContext(), R.string.toast_exists, Toast.LENGTH_LONG).show();
+                                return;
+                            }
                             group.add(note);
                             note.write();
                             if (group.isExpanded()) {
@@ -55,6 +61,7 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
 
                             Intent intent = new Intent(v.getContext(), ViewActivity.class);
                             intent.putExtra(MainActivity.NOTE, note);
+                            intent.putExtra(MainActivity.OPEN_IMMEDIATELY, true);
                             ((Activity)v.getContext()).startActivityForResult(intent, MainActivity.VIEW_RESULT);
                             adapter.setSelected(note);
                         });
@@ -66,6 +73,10 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
                                 return;
 
                             Note note = new Note(name);
+                            if (note.exists()) {
+                                Toast.makeText(v.getContext(), R.string.toast_exists, Toast.LENGTH_LONG).show();
+                                return;
+                            }
                             group.add(note);
                             note.write();
                             if (group.isExpanded()) {
@@ -76,7 +87,12 @@ public class GroupViewHolder extends RecyclerView.ViewHolder {
                         break;
                     case R.id.rename:
                         Dialogs.InputDialog(v.getContext(), R.string.dialog_rename_group, group.getName(), name -> {
-                            group.rename(name);
+                            if (name.length() == 0 || name.equals(group.getName()))
+                                return;
+                            if (!group.rename(name)) {
+                                Toast.makeText(v.getContext(), R.string.toast_exists, Toast.LENGTH_LONG).show();
+                                return;
+                            }
                             updateTitle();
                         });
                         break;

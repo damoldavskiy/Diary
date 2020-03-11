@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +35,10 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
                         Dialogs.InputDialog(v.getContext(), R.string.dialog_rename_note, note.getName(), name -> {
                             if (name.length() == 0 || name.equals(note.getName()))
                                 return;
+                            if (!note.rename(name)) {
+                                Toast.makeText(v.getContext(), R.string.toast_exists, Toast.LENGTH_LONG).show();
+                                return;
+                            }
                             note.rename(name);
                             nameView.setText(note.getName());
                         });
